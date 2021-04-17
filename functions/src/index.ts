@@ -9,7 +9,7 @@ app.use(cors({origin: true}));
 const someUrl = async (req: Request, res: Response) => {
   try {
     const sendObject = {
-      someField: "some data",
+      someField: "some data test",
     };
     res.status(200).send({
       message: "bir sorun yok",
