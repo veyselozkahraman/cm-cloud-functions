@@ -26,7 +26,8 @@ const somePostExample = async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/json");
     res.status(200).send({
       // eslint-disable-next-line max-len
-      response: `you sent the following text in the request body: ${req.body.text}`,
+      data1: `you sent the following text in the request body: ${req.body.text}`,
+      data2: req.body,
     });
   } catch {
     res.status(500).json("bir sorun var");
