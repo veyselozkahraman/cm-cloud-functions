@@ -5,6 +5,10 @@ import {Request, Response} from "express";
 
 const app = express();
 app.use(cors({origin: true}));
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true,
+}));
 
 const someUrl = async (req: Request, res: Response) => {
   try {
