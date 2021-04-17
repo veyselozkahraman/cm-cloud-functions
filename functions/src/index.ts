@@ -20,6 +20,20 @@ const someUrl = async (req: Request, res: Response) => {
   }
 };
 
+const somePostExample = async (req: Request, res: Response) => {
+  try {
+    console.log(req.body);
+    res.status(200).send({
+      // eslint-disable-next-line max-len
+      response: `you sent the following text in the request body: ${req.body.text}`,
+    });
+  } catch {
+    res.status(500).json("bir sorun var");
+  }
+};
+
+
 app.get("/", (req, res) => res.status(200).send("Hey there!"));
 app.get("/someUrl", someUrl);
+app.post("/hello", somePostExample);
 exports.app = functions.https.onRequest(app);
