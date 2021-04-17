@@ -23,6 +23,7 @@ const someUrl = async (req: Request, res: Response) => {
 const somePostExample = async (req: Request, res: Response) => {
   try {
     console.log(req.body);
+    res.setHeader("Content-Type", "application/json");
     res.status(200).send({
       // eslint-disable-next-line max-len
       response: `you sent the following text in the request body: ${req.body.text}`,
