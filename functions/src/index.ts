@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as express from "express";
 import * as cors from "cors";
 import {Request, Response} from "express";
+import {getFile} from "./storage_handler";
 
 const app = express();
 app.use(cors({origin: true}));
@@ -12,9 +13,7 @@ app.use(express.urlencoded({
 
 const someUrl = async (req: Request, res: Response) => {
   try {
-    const sendObject = {
-      someField: "some data test",
-    };
+    const sendObject = await getFile();
     res.status(200).send({
       message: "bir sorun yok",
       data: sendObject,
