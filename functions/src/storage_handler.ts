@@ -5,16 +5,15 @@ admin.initializeApp(functions.config().firebase);
 
 export const getFile = async (): Promise<unknown> => {
   try {
-    let file = {};
-    return admin.storage().bucket().file("conf.json")
-        .download(function(err, contents) {
-          if (!err) {
-            file = JSON.parse(contents.toString("utf8"));
-            return file;
-          } else {
-            return {err};
-          }
-        });
+    const fileRef = admin.storage().bucket().file("conf.json");
+    const file = fileRef.download(function(err, contents) {
+      if (!err) {
+        return JSON.parse(contents.toString("utf8"));
+      } else {
+        return {err};
+      }
+    });
+    return file;
   } catch (error) {
     return {error};
   }
