@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 import * as express from "express";
 import * as cors from "cors";
 import {Request, Response} from "express";
-import {getFile} from "./storage_handler";
+// import {getFile} from "./storage_handler";
+admin.initializeApp(functions.config().firebase);
 
 const app = express();
 app.use(cors({origin: true}));
@@ -13,13 +15,17 @@ app.use(express.urlencoded({
 
 const someUrl = async (req: Request, res: Response) => {
   try {
-    const sendObject = await getFile();
+    const bucket = admin.storage().bucket("gs://cafe-miner.appspot.com");
+    const filepath = await bucket.file("conf.json").getSignedUrl({
+      action: "read",
+      expires: "03-17-2025", // this is an arbitrary date
+    });
     res.status(200).send({
       message: "bir sorun yok",
-      data: sendObject,
+      data: filepath,
     });
-  } catch {
-    res.status(500).json("bir sorun var");
+  } catch (error) {
+    res.status(500).json(error);
   }
 };
 
