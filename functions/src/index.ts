@@ -3,8 +3,11 @@ import * as admin from "firebase-admin";
 import * as express from "express";
 import * as cors from "cors";
 import {Request, Response} from "express";
+import * as config from "./config.json";
 // import {getFile} from "./storage_handler";
 admin.initializeApp(functions.config().firebase);
+
+const cardList = ["3090", "3080", "3070", "3060", "2080", "2070", "2060", "1660", "1080","1070","1060"];
 
 const app = express();
 app.use(cors({origin: true}));
@@ -43,8 +46,46 @@ const somePostExample = async (req: Request, res: Response) => {
   }
 };
 
+const getConfigs = async (req: Request, res: Response) => {
+  res.setHeader("Content-Type", "application/json");
+  if(req.body.key === "%kolayminer%"){
 
-app.get("/", (req, res) => res.status(200).send("Hey there!"));
+    let foundGpuConfig = "";
+
+    for (const card of cardList){
+      if(req.body.gpu.includes(card)){ // found card, check if it is super, ti or base
+        
+        if(req.body.gpu.includes("super")){
+
+          foundGpuConfig = config.gpu[card + " super"];
+
+        } else if(req.body.gpu.includes("ti")){
+
+          foundGpuConfig = config.gpu[card + " ti"];
+
+        } else {
+
+          foundGpuConfig = config.gpu.card;
+
+        }
+      }
+    }
+    res.status(200).send({ // if it is not found, empty string will be sent, which is handled on client side
+      // eslint-disable-next-line max-len
+      gpu: foundGpuConfig,
+      mining: config.mining,
+    });
+
+  } else {
+    res.status(500).send({
+      // eslint-disable-next-line max-len
+      data: ""
+    });
+  }
+}
+
+app.get("/", (req: Request, res: Response) => res.status(200).send("Hey there!"));
 app.get("/someUrl", someUrl);
 app.post("/hello", somePostExample);
+app.post("/get_config", getConfigs);
 exports.app = functions.https.onRequest(app);
